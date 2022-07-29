@@ -17,7 +17,7 @@ export default function Home() {
   }
   return (
     <>
-      <div className='hidden lg:flex absolute px-5 py-6 Nunito w-full justify-center items-center h-screen'>
+      <div className='left-position hidden lg:flex absolute px-5 py-6 Nunito justify-center items-center h-screen w-10/12'>
         <div className='w-6/12 shadow-xl p-5 rounded-lg border'>
           <h1 className="text-center font-bold text-3xl mb-6">Banker Market Authentication</h1>
           <div className='flex flex-col items-start mt-3'>

@@ -12,13 +12,29 @@ const BankerMarket = () => {
 	const [url, setURL] = useState('')
 	const [btn, setBtn] = useState('Copy!')
 	const router = useRouter()
-	console.log(router)
-	const { user, setAlert } = useAuthContext()
+	const { userData, setAlert, filter } = useAuthContext()
 	const [bankerData, setBankerData] = useState()
+	const [searchBankerData, setSearchBankerData] = useState(bankerData && bankerData)
+
 	useEffect(() => {
-		if (user) {
-			setURL(`${window.location.origin}/banker-market/${user && user.uid}`)
-			const q = query(collection(db, "banker_data"), where("publisher_uid", "==", user.uid));
+		if (filter.length === 0) {
+			setSearchBankerData(bankerData && bankerData)
+		} else {
+			let arr = [];
+			bankerData && bankerData.forEach((data) => {
+				if (data.email.toLowerCase().includes(filter.toLowerCase()) || data.name.toLowerCase().includes(filter.toLowerCase()) || data.campaign.campaign_name.toLowerCase().includes(filter.toLowerCase())) {
+					arr.push(data)
+				}
+			})
+			setSearchBankerData(arr)
+		}
+	}, [filter, bankerData])
+
+
+	useEffect(() => {
+		if (userData) {
+			setURL(`${window.location.origin}/banker-market/${userData && userData.uid}`)
+			const q = query(collection(db, "banker_data"), where("publisher_uid", "==", userData.uid));
 			const unsubscribe = onSnapshot(q, (querySnapshot) => {
 				const arr = [];
 				querySnapshot.forEach((doc) => {
@@ -29,7 +45,7 @@ const BankerMarket = () => {
 				setBankerData(arr)
 			});
 		}
-	}, [user]);
+	}, [userData]);
 
 	const copyFunc = () => {
 		setBtn('Copied!');
@@ -41,7 +57,7 @@ const BankerMarket = () => {
 	}
 	return (
 		<>
-			<div className='hidden lg:block absolute top-20 px-5 pt-6 Nunito w-full h-calc-height overflow-scroll'>
+			<div className='hidden lg:block absolute px-5 py-6 Nunito justify-center items-center h-calc-height w-10/12 left-position top-24'>
 				<h1 className='text-5xl font-bold text-center'>Banker Market</h1>
 				<div className='mt-8 flex items-center'>
 					<label>Banker URL: </label>
@@ -53,9 +69,9 @@ const BankerMarket = () => {
 
 				<div className='mt-8'>
 					<h1 className='font-bold text-3xl'>Data: </h1>
-					<div className='grid mt-3 gap-y-6 grid-cols-3 justify-items-center'>
+					<div className='grid mt-3 gap-y-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 justify-items-center pb-10'>
 						{
-							bankerData && bankerData.map((data, i) => {
+							searchBankerData && searchBankerData.map((data, i) => {
 								return <BankerCard key={i} data={data} />
 							})
 						}
@@ -65,7 +81,7 @@ const BankerMarket = () => {
 
 
 
-			<div className='sm:block lg:hidden absolute top-20 px-3 pt-6 Nunito w-full h-calc-height overflow-scroll'>
+			<div className='md:block sm:block lg:hidden absolute top-20 px-3 pt-6 Nunito w-full h-calc-height overflow-scroll'>
 				<h1 className='text-3xl font-bold text-center'>Banker Market</h1>
 				<div className='mt-8 flex justify-center flex-col w-11/12 items-start'>
 					<label>Banker URL: </label>
@@ -77,7 +93,7 @@ const BankerMarket = () => {
 
 				<div className='mt-8'>
 					<h1 className='font-bold text-3xl'>Data: </h1>
-					<div className='grid mt-3 gap-y-6 grid-cols-1 justify-items-center mb-3'>
+					<div className='grid mt-3 gap-y-6 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 justify-items-center mb-3'>
 						{
 							bankerData && bankerData.map((data, i) => {
 								return <BankerCard key={i} data={data} />

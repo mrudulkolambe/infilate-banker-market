@@ -104,7 +104,7 @@ const BankerMarket = () => {
 	}
 	return (
 		<>
-			<div className='hidden lg:block pt-3 Nunito w-full h-calc-height-half overflow-scroll absolute top-20'>
+			<div className='hidden lg:block pt-3 Nunito w-full h-calc-height-half overflow-scroll absolute top-24'>
 				<h1 className='font-bold text-5xl text-center pb-3'>Banker Market</h1>
 				<div className='flex px-10 justify-between items-center w-full'>
 					<div className='font-bold'>{adminData && adminData.username}</div>
